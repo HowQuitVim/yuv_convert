@@ -2,11 +2,8 @@ package com.zmy.yuv_convert.output;
 
 import com.zmy.yuv_convert.Format;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ByteArrayOutput extends Output<byte[][]> {
-    private final List<byte[]> ret = new ArrayList<>();
+    private byte[][] data;
 
     public ByteArrayOutput(Format format) {
         super(format);
@@ -14,26 +11,28 @@ public class ByteArrayOutput extends Output<byte[][]> {
 
 
     @Override
-   public byte[][] getOutput() {
-        for (int i = 0; i < format.getComponentCount(); i++) {
-            if (i >= ret.size()) {
-                ret.add(new byte[format.getComponentCapacity(i, width, height)]);
-            } else {
-                if (ret.get(i).length < format.getComponentCapacity(i, width, height)) {
-                    ret.set(i, new byte[format.getComponentCapacity(i, width, height)]);
-                }
-            }
-        }
+    public byte[][] getOutput() {
+        ensureDataCapacity();
         int start = 0;
         for (int component = 0; component < format.getComponentCount(); component++) {
-            byte[] buffer = ret.get(component);
             container.position(start);
             int size = format.getComponentCapacity(component, width, height);
             container.limit(start + size);
             start += format.getComponentCapacity(component, width, height);
-            container.get(buffer);
+            container.get(data[component]);
         }
+        return data;
+    }
 
-        return (byte[][]) ret.toArray();
+    //确保data有足够的容量
+    private void ensureDataCapacity() {
+        if (data == null || data.length != format.getComponentCount()) {
+            data = new byte[format.getComponentCount()][];
+        }
+        for (int component = 0; component < format.getComponentCount(); component++) {
+            if (data[component] == null || data[component].length < format.getComponentCapacity(component, width, height)) {
+                data[component] = new byte[format.getComponentCapacity(component, width, height)];
+            }
+        }
     }
 }
