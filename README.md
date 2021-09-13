@@ -1,8 +1,8 @@
 # yuv_convert
 是一个基于libyuv的图像色彩空间转换框架.支持NV12,NV21,YUV420,RGBA四种格式的相互转化
 
-# 支持的abi:
-armeabi-v7a,arm64-v8a
+
+armeabi-v7a,arm64-v8a,x86,x86-64
 
 # 集成:
 implementation 'io.github.IAmCodingCoding:yuv_convert:$last_version'
