@@ -1,0 +1,3 @@
+include ':yuv_convert'
+include ':app'
+rootProject.name = "yuv_convert"
